@@ -29,8 +29,8 @@ import_module('autofit.producers')
 
 
 if not network.is_fully_linked():
-    raise network.IncompleteNetwork("unlinked requires %s\nunliked provides %s" % (network._unlinked_requires,
-                                                                                   network._unlinked_provides))
+    raise network.IncompleteNetwork("unlinked requires %s\nunlinked provides %s" % (network._unlinked_requires,
+                                                                                    network._unlinked_provides))
 logger.info("Network was successfully linked")
 models.create_all(config.Development)
 logging.info("Database connected")

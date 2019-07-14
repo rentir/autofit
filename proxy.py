@@ -121,13 +121,13 @@ def schedule_producers():
             counter = {}
             sids = set()
             for jslot in oproducer.requires:  # type: ptypes.JoinedSlot
-                name = jslot.name
-                name_ = name
+                name = jslot.alias or jslot.name
                 if name in counter:
-                    name_ = "%s_%s" % (name, counter[jslot.name])
-                    counter[jslot.name] += 1
+                    name_ = jslot.alias or "%s_%s" % (name, counter[name])
+                    counter[name] += 1
                 else:
-                    counter[jslot.name] = 1
+                    name_ = name
+                    counter[name] = 1
                 table = session_.query(aliased(InputSlot, name=name_)).filter_by(sname=name,
                                                                                  pname=pname,
                                                                                  date=date).subquery()
@@ -140,7 +140,9 @@ def schedule_producers():
                 for s, p in zip(slot_keys, producer_keys):
                     join_on = and_(join_on, seed.c[p] == table.c[s])
                 for row in session_.query(table.c.sid).select_from(seed.join(table, join_on)):
-                    sids.add(row.sid)  # need to keep track of this to link the producer to the slots it processes
+                    # need to keep track of this to link the producer to the slots it processes
+                    #
+                    sids.add(row.sid)
                 for row in (session_.query(table.c.id_).
                             select_from(seed.join(table, join_on)).
                             filter(table.c.state == InputSlotStatesEnum.updated)):
