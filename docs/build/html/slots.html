@@ -1,0 +1,298 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>The slot pseudo code description &#8212; autofit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="MRP DB" href="mrb.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-slot-pseudo-code-description">
+<h1>The slot pseudo code description<a class="headerlink" href="#the-slot-pseudo-code-description" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-monitor-pseudo-code">
+<h2>The monitor pseudo code<a class="headerlink" href="#the-monitor-pseudo-code" title="Permalink to this headline">¶</a></h2>
+<p>The monitor is that piece of code that monitor the <em>buffer</em> folder. In this folder, producers
+drops items and the monitor processes that items and plug them into the slots.
+::
+Upon arrival of new items, the slot table will be updated setting the new status as either ‘updated’ or
+‘failed’. It is not in the mandate of the Monitor to perform further processing, which is left for the SlotTable.flush()
+method.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># MAX_PROCESSED_ITEMS is the maximum number of incoming items that</span>
+<span class="c1"># can be processed by this machine&#39;s instance</span>
+<span class="n">MAX_PROCESSED_ITEMS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># This piece of code monitor for incomining files in the</span>
+<span class="c1"># buffer folder</span>
+<span class="k">def</span> <span class="nf">process</span><span class="p">():</span>
+        <span class="n">processed_items</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">with</span> <span class="n">buffer_lock</span><span class="p">():</span> <span class="c1"># wait until it gains access to the directory</span>
+                <span class="k">with</span> <span class="n">mrp_lock</span><span class="p">():</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.json&#39;</span><span class="p">):</span>
+                                <span class="nb">id</span> <span class="o">=</span> <span class="n">build_id_from</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                                <span class="n">fname</span> <span class="o">=</span> <span class="n">build_file_name</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;ok:</span>
+                                        <span class="n">SlotTable</span><span class="o">.</span><span class="n">updated</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">SlotTable</span><span class="o">.</span><span class="n">failed</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+                                <span class="n">move_file_from_to</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+                                <span class="n">processed_items</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="k">if</span> <span class="n">processed_items</span> <span class="o">==</span> <span class="n">MAX_PROCESSED_ITEMS</span><span class="p">:</span>
+                                        <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-slots-pseudo-code">
+<h2>The slots pseudo code<a class="headerlink" href="#the-slots-pseudo-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># This piece of code manages the update of the slots status</span>
+<span class="c1"># It is responsible to</span>
+<span class="c1"># 1. create new slots</span>
+<span class="c1"># 2. set the status to &#39;pending&#39; or to &#39;invalid&#39;</span>
+<span class="c1"># 3. It should also the the status to &#39;pending&#39; and &#39;current&#39;</span>
+
+<span class="c1"># The status &#39;updated&#39; is necessary as it is not obvious that there are</span>
+<span class="c1"># spare producers able to accept the work.</span>
+<span class="c1"># The &#39;failed&#39; state is needed too - only once all dependent slots have</span>
+<span class="c1"># been invalidated the state can go to &#39;invalid&#39;</span>
+<span class="n">SSTATUS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;updated&#39;</span><span class="p">,</span> <span class="s1">&#39;current&#39;</span><span class="p">,</span> <span class="s1">&#39;stale&#39;</span><span class="p">,</span> <span class="s1">&#39;pending&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;invalid&#39;</span><span class="p">]</span>
+<span class="k">class</span> <span class="nc">SlotTable</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is the SLOT_TABLE.</span>
+<span class="sd">        It has 3 public member functions:</span>
+<span class="sd">        set_to_updated(s,fname) : set the status to &#39;updated&#39;</span>
+<span class="sd">        set_to_failed(s) : set the status to &#39;failed&#39;</span>
+<span class="sd">        flush() : process all the changes</span>
+<span class="sd">        get_slot_id(s) : produce a unique slot it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sid</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># concatenation of keys</span>
+        <span class="n">slotname</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="nb">file</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># path to the file containing the data</span>
+        <span class="n">sstatus</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># this is the slot status in SSTATUS</span>
+        <span class="n">updatetime</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># the time stamp of last update</span>
+
+        <span class="k">def</span> <span class="nf">_slot_to_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                concatenate all the slot s attributes, joining by &#39;.&#39;</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">valued</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_slot_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                Return True is s is in the table, False otherwise</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="n">_slot_to_id</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">sid</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="s1">&#39;sid&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sid</span> <span class="o">==</span> <span class="nb">id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">def</span> <span class="nf">_add_slot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                Insert the slot s in the table with status=&#39;void&#39; as return the sid</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slot_exist</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Slot already exist&quot;</span><span class="p">)</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="n">create_id</span><span class="p">()</span>
+                <span class="n">SlotTable</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">slotname</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sstatus</span><span class="o">=</span><span class="s1">&#39;void&#39;</span><span class="p">,</span> <span class="n">sid</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nb">id</span>
+
+        <span class="k">def</span> <span class="nf">get_slot_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                concatenate all the slot s attributes, joining by &#39;.&#39;</span>
+<span class="sd">                check if the sid is already available</span>
+<span class="sd">                if it is, return it otherwise create a new one,</span>
+<span class="sd">                insert into the table and return it</span>
+<span class="sd">                TODO: how do we treat date? Should be a part of the key</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slot_exist</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">SlotTable</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;sid&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sid</span> <span class="o">==</span> <span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">fetch_one</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Slot not existing&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                The item was updated.</span>
+<span class="sd">                All listeners are notified and then the item&#39;s status is set to &#39;pending&#39;.</span>
+<span class="sd">                The status of dependent slots are set to &#39;stale&#39;</span>
+<span class="sd">                NB: The slot id always exists as it is created once the producer accepts the incoming slots</span>
+<span class="sd">                and update the SlotTree table</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+                <span class="n">sid</span> <span class="o">=</span> <span class="n">get_slot_id</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">listeners</span> <span class="o">=</span> <span class="n">get_listeners_of</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+                        <span class="n">l</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">set_to_pending</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_invalidate_dependents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sid</span><span class="p">):</span>
+                <span class="n">invalid_sids</span> <span class="o">=</span> <span class="n">SlotTree</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;sid2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">SID1</span><span class="o">=</span><span class="n">sid</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">invalid_sids</span><span class="p">:</span>
+                        <span class="n">set_to_stale</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">get_listener</span><span class="p">(</span><span class="n">sid</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                                <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
+                        <span class="n">_invalidate_dependents</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                The item processing failed.</span>
+<span class="sd">                The status of dependent slots are set to &#39;stale&#39;</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_to_failed</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">sid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_slot_id</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">_invalidate_dependents</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">set_to_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+                <span class="n">sid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_slot_id</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sid</span><span class="o">==</span><span class="n">sid</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">status</span><span class="p">,</span><span class="nb">file</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;updated&#39;</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">set_to_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+                <span class="n">sid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_slot_id</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sid</span><span class="o">==</span><span class="n">sid</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">status</span><span class="p">,</span><span class="nb">file</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;updated&#39;</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">status</span><span class="o">==</span><span class="s1">&#39;updated&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">status</span><span class="o">==</span><span class="s1">&#39;updated&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_failed</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-proxyproducer-pseudo-code">
+<h2>The ProxyProducer pseudo code<a class="headerlink" href="#the-proxyproducer-pseudo-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ProxyProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer_name</span> <span class="o">=</span> <span class="n">producer</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">required_slot_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">producer</span><span class="o">.</span><span class="n">required_slots</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optional_slot_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">producer</span><span class="o">.</span><span class="n">optional_slots</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">producers</span><span class="o">.</span><span class="n">keys</span>
+
+        <span class="k">def</span> <span class="nf">accepted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sid</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Return True if the sid is already registered in the table</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">accept</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Take the incoming slot, join it with the producer keys and insert it in the</span>
+<span class="sd">                producer table</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">launch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                1. take all distinct combination of producers keys</span>
+<span class="s2">                2. for each combination compute the number n of required slots</span>
+<span class="s2">                3. if n&gt;self.required_slot_num and at east one row is not pending then</span>
+<span class="s2">                        1. set all row to processing</span>
+<span class="s2">                        2. kick-off the producer task</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-slottree-pseudo-code">
+<h2>The SlotTree pseudo code<a class="headerlink" href="#the-slottree-pseudo-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SlotTree</span><span class="p">():</span>
+        <span class="n">SD1</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">SD2</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sd1</span><span class="p">,</span> <span class="n">sd2</span><span class="p">):</span>
+                <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                add the entry (sd1,sd2) to the table</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The slot pseudo code description</a><ul>
+<li><a class="reference internal" href="#the-monitor-pseudo-code">The monitor pseudo code</a></li>
+<li><a class="reference internal" href="#the-slots-pseudo-code">The slots pseudo code</a></li>
+<li><a class="reference internal" href="#the-proxyproducer-pseudo-code">The ProxyProducer pseudo code</a></li>
+<li><a class="reference internal" href="#the-slottree-pseudo-code">The SlotTree pseudo code</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="mrb.html" title="previous chapter">MRP DB</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/slots.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Renzo Tiranti.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/slots.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

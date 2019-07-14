@@ -1,0 +1,338 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MRP DB &#8212; autofit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The slot pseudo code description" href="slots.html" />
+    <link rel="prev" title="The MRP database, slots and producers" href="slot_prod.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mrp-db">
+<h1>MRP DB<a class="headerlink" href="#mrp-db" title="Permalink to this headline">¶</a></h1>
+<p>The MRP database is needed in order to:</p>
+<ul class="simple">
+<li>Synchronize the access to the data from different processes running of different machines</li>
+<li>Persist the slot’s states</li>
+<li>Keep track of slot’s dependency trees</li>
+<li>Keep track of running producers</li>
+<li>Joining the slot’s data to be feed to the producers</li>
+</ul>
+<p>In the following, the required table are listed</p>
+<div class="section" id="underlyings">
+<h2>underlyings<a class="headerlink" href="#underlyings" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>uid</li>
+<li>uname</li>
+<li>ric</li>
+<li>currency</li>
+<li>class</li>
+<li>type</li>
+<li>region</li>
+</ul>
+</div>
+<div class="section" id="slot-classes">
+<h2>slot_classes<a class="headerlink" href="#slot-classes" title="Permalink to this headline">¶</a></h2>
+<p>Information of the slot, with columns:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>SLOT_NAME</dt>
+<dd>Name of the slot, for example MarketData.Vanilla.Totem</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SLOT_ID</dt>
+<dd>Identifier</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>KEY_MAP</dt>
+<dd>This is a string made up of the slot’s keys joined by ‘/, for example ‘uname/region/type’</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="producer-classes">
+<h2>producer_classes<a class="headerlink" href="#producer-classes" title="Permalink to this headline">¶</a></h2>
+<p>Information on the producer.</p>
+</div>
+<div class="section" id="slot-deps">
+<h2>SLOT_DEPS<a class="headerlink" href="#slot-deps" title="Permalink to this headline">¶</a></h2>
+<p>Information on slots’ dependencies:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>SLOT_ID</dt>
+<dd>the id of the slot</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>DEP_ON_ID</dt>
+<dd>The slot SLOT_ID depends on</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>REQUIRED</dt>
+<dd>The dependency is REQUIRED (1) or OPTIONAL (0)</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="slot-table">
+<h2>SLOT_TABLE<a class="headerlink" href="#slot-table" title="Permalink to this headline">¶</a></h2>
+<p>Keeps track of existing slots and register them with the SID.
+Columns are:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>SLOT_ID</dt>
+<dd>id of the slot, a foreign key into SLOT_META</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>DATE</dt>
+<dd>The valuation date</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SLOT_KEY</dt>
+<dd>This is a string made up of the slot’s keys joined by ‘/, for
+example ‘0123456/EURO/INDEX’. The semantic is provided by they
+SLOT_META.KEY_MAP</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SID</dt>
+<dd>unique identifier</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SSTATUS</dt>
+<dd>slot’s status</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>FILE</dt>
+<dd>path to the file containing the data</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="slot-tree">
+<h2>SLOT_TREE<a class="headerlink" href="#slot-tree" title="Permalink to this headline">¶</a></h2>
+<p>Slot’s dependency tree. This is required to invalidate downstream slots
+(state set to ‘stale’) upon slot’s update.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>SID1</dt>
+<dd>SID of the slot</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SID2</dt>
+<dd>SID of a slot depending on SID1</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This table is not a duplicate of SLOT_DEPS. The latter describes they
+dependencies between slots through methodologies, the former
+the actual dependency on the produced slots</p>
+</div>
+</div>
+<div class="section" id="running-prod">
+<h2>RUNNING_PROD<a class="headerlink" href="#running-prod" title="Permalink to this headline">¶</a></h2>
+<p>The table of the running producers</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>PROD_NAME</dt>
+<dd>The producer name</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PID</dt>
+<dd>The producer unique id</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>START_TIME</dt>
+<dd>The time when the producer was kicked off</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SID</dt>
+<dd>The slots being produced</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="slots-tables">
+<h2>SLOTs Tables<a class="headerlink" href="#slots-tables" title="Permalink to this headline">¶</a></h2>
+<p>Each slot is associated with a table with same name as the slot, with ‘.’ replaced by ‘_’.
+The tables have columns which are specific to the relative slot, apart a few which are fixed:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>DATE</dt>
+<dd>The valuation date</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>SID</dt>
+<dd>The id from the SLOTS_TABLE</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>LAST_UPDATED</dt>
+<dd>The last update time</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PRODUCER</dt>
+<dd>The producer that created the data</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PRIORITY</dt>
+<dd>The producer’s priority</dd>
+</dl>
+</li>
+<li>Set of specific keys that identifies the item itself. In SQL parlance, these are <em>primary keys</em>.</li>
+</ul>
+<p>PRODUCERs Tables
+Each producers is associated with a list of slots which where notified to the producers and accepted.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>SID</dt>
+<dd>the id from the slot_table</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PSTATUS</dt>
+<dd>status of the processing (‘pending’,’processing’)</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="parcels-table">
+<h2>parcels_table<a class="headerlink" href="#parcels-table" title="Permalink to this headline">¶</a></h2>
+<p>Contains the Information that the producer proxy need to bundle the slots into
+parcels and kick-off tasks.</p>
+<p>So far we have:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>pid</dt>
+<dd>The producer id</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>sid</dt>
+<dd>The slot id acknowledged by the producer</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>uname, currency, class, type, region</dt>
+<dd>key from the slot, some could be None</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MRP DB</a><ul>
+<li><a class="reference internal" href="#underlyings">underlyings</a></li>
+<li><a class="reference internal" href="#slot-classes">slot_classes</a></li>
+<li><a class="reference internal" href="#producer-classes">producer_classes</a></li>
+<li><a class="reference internal" href="#slot-deps">SLOT_DEPS</a></li>
+<li><a class="reference internal" href="#slot-table">SLOT_TABLE</a></li>
+<li><a class="reference internal" href="#slot-tree">SLOT_TREE</a></li>
+<li><a class="reference internal" href="#running-prod">RUNNING_PROD</a></li>
+<li><a class="reference internal" href="#slots-tables">SLOTs Tables</a></li>
+<li><a class="reference internal" href="#parcels-table">parcels_table</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="slot_prod.html" title="previous chapter">The MRP database, slots and producers</a></li>
+      <li>Next: <a href="slots.html" title="next chapter">The slot pseudo code description</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/mrb.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Renzo Tiranti.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/mrb.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

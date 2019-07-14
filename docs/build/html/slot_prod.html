@@ -1,0 +1,508 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>The MRPR database, slots and producers &#8212; autofit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MRP DB" href="mrb.html" />
+    <link rel="prev" title="Aim and basic specifications of the Autofit system" href="intro.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-mrpr-database-slots-and-producers">
+<h1>The MRPR database, slots and producers<a class="headerlink" href="#the-mrpr-database-slots-and-producers" title="Permalink to this headline">¶</a></h1>
+<p>The system is based on two abstractions of data and processing: <em>slots</em> and <em>producers</em>.
+The slots are linked to entries in a database called MRP table, where the acronyms
+stands for Market Data, Reports, Parameters and Risk.</p>
+<div class="section" id="slot">
+<h2>Slot<a class="headerlink" href="#slot" title="Permalink to this headline">¶</a></h2>
+<p>The slot in an abstraction of a collection of homogeneous data, which is
+indexed by a string <em>name</em> and whose data is indicated by a date and a
+collection of supplementary keys.
+It is called slot because once data is generated and wrapped in a slot, it is
+inserted into the MRP table. Example of slot’s name may be
+<strong>MarketData.Vanilla.Totem</strong> or <strong>ImpliedVolatility.Vanilla.Totem</strong> or
+<strong>ProductRate.TRS.Totem</strong>.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p>It is unclear how the slot can be defined, i.e. it represents a
+homogeneous dataset, but how is the scope determined? For example, option prices
+should be grouped into a unique slot based on
+expiry/strike/underlying or just underlying? Probably the grouping
+should be also determined by the primary keys, so the question is:
+what are the primary keys for a slot?</p>
+<blockquote class="last">
+<div>This must be decided or it won’t be possible to handle proxy.</div></blockquote>
+</div>
+<div class="section" id="slot-types">
+<h3>Slot types<a class="headerlink" href="#slot-types" title="Permalink to this headline">¶</a></h3>
+<p>These are the types:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Report</dt>
+<dd><p class="first last">This represents producers’ report, for example back-testing results.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>MarketData</dt>
+<dd><p class="first last">As the name says - contains market data</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Parameter</dt>
+<dd><p class="first last">Represents calibrated parameters - model inputs but also spreads to be
+used for Proxies.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Risk</dt>
+<dd><p class="first">Represents risk. The aggregation should be at underlying level, though
+the data itself should have expiry granularity.</p>
+<blockquote class="last">
+<div><div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p>It must still be defined what risk should be considered here.</p>
+<ol class="last arabic simple">
+<li>Tau</li>
+<li>EquityRho</li>
+<li>Dividends</li>
+<li>VarSwapVolBasis risk</li>
+<li>dTvdVolOfVolATMBackward</li>
+<li>VarSwapVIXBasis risk</li>
+<li>dTvdLVSVVolOfVol</li>
+</ol>
+</div>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>How do we ensure that the calibrated parameters are used consistently?</p>
+<p>Usually it is not a problem, unless the parameters are calibrated
+for the same market data.</p>
+<p>For example, some underlying may have product rate and divs calibrated
+from Vanilla prices, other from DivSwap + Vanilla, other from TRS +
+DivSwap, other from TRS + Vanilla.
+One approach could be based on <strong>priority</strong>. For product rate could be:</p>
+<ol class="arabic simple">
+<li>Vanilla only      -&gt; ProductRate=0, Dividends=0</li>
+<li>DivSwap + Vanilla -&gt; ProductRate=1, Dividends=1</li>
+<li>TRS + Vanilla     -&gt; ProductRate=2, Dividends=2</li>
+</ol>
+<p class="last">It seems that it is the methodologies that set the priority in case
+it calibrate multiple parameters.</p>
+</div>
+</div>
+<div class="section" id="slots-states">
+<h3>Slots states<a class="headerlink" href="#slots-states" title="Permalink to this headline">¶</a></h3>
+<p>Slots are characterized by a <strong>state</strong>:</p>
+<ol class="arabic simple">
+<li><dl class="first docutils">
+<dt>broadcasting</dt>
+<dd>The slot’s data was updated and processing has not started yet. We need This
+state to <strong>trigger</strong> Producers, for example when the system is restarted</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>pending</dt>
+<dd>The slot’s data has just been generated and all linked producers are processing
+the data</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>current</dt>
+<dd>The slot’s data has been processed by all the linked producers.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>saved</dt>
+<dd>The slot’s data was saved to the database(s)</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>invalid</dt>
+<dd>Some non-recoverable error happened during the processing</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>stale</dt>
+<dd>At least one of the upstream slots changed status to Failed/Updated/Stale</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>void</dt>
+<dd>This is the starting state of a slot, when no data has been produced yet</dd>
+</dl>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The slots’ state is a mess, we need clarity, and a clear definition
+of what those states really mean!!!</p>
+</div>
+<p>The chart below shows how the state evolves and what triggers changes in the
+state</p>
+<a class="reference internal image-reference" href="_images/slot_states.png"><img alt="_images/slot_states.png" class="align-center" src="_images/slot_states.png" style="width: 702.0px; height: 354.0px;" /></a>
+</div>
+<div class="section" id="brainstorming">
+<h3>Brainstorming<a class="headerlink" href="#brainstorming" title="Permalink to this headline">¶</a></h3>
+<p>How do we handle proxies, or cases in which many input slots feed into
+a fewer numbers of output slots?</p>
+<p>To to this there must be a logic that performs aggregation of slots’ keys.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Some slots may need to be linked, for example product rate and
+dividends are related. <strong>THIS WAS ADDRESSED BY THE PRIORITY!</strong></p>
+</div>
+</div>
+<div class="section" id="the-sid">
+<h3>The SID<a class="headerlink" href="#the-sid" title="Permalink to this headline">¶</a></h3>
+<p>Each data in the slot is identified by a unique id the <em>SID</em>. This is not a
+duplicate of the slot’s key as the date triggers a new SID.</p>
+</div>
+<div class="section" id="the-listeners">
+<h3>The Listeners<a class="headerlink" href="#the-listeners" title="Permalink to this headline">¶</a></h3>
+<p>To each slot is associated a list of producers, or <em>listeners</em> in this context,
+that has the slot as required or optional, see next section for the definition.
+This list is required so that, upon generation of new or updated slots, the
+depending producers are notified.</p>
+</div>
+<div class="section" id="a-journey-inside-the-slot-life">
+<h3>A journey inside the slot life!<a class="headerlink" href="#a-journey-inside-the-slot-life" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>A slot is produced and it goes into the table with ‘updated’ state.</li>
+<li>All listeners are notified and acknowledge the slot was updated</li>
+<li>The listeners also notify the slots they produce of the event, and those slots
+become ‘stale’</li>
+<li>The producers perform their job, return the results and notify the slot  of
+their completion</li>
+<li>The triggering slot compare the listed of producers which acknowledged the
+change and the producers which returned the results</li>
+<li>If all producers have performed the task, the slot’s status becomes ‘current’</li>
+<li>Now one of the slots feeding into this slot becomes ‘stale’. This slot becomes
+stale too and notified to all producers</li>
+</ul>
+</div>
+</div>
+<div class="section" id="producer">
+<h2>Producer<a class="headerlink" href="#producer" title="Permalink to this headline">¶</a></h2>
+<p>A producer is a process which, given a list of optional input slots, produces a
+number of output slots. A producer will always have at least one slot as output.
+A producer also must define a list of:</p>
+<ol class="arabic simple">
+<li><dl class="first docutils">
+<dt>Required input slots</dt>
+<dd>These are the minimum data required by the producer to perform the task.
+A required slot can be <strong>inclusive</strong> or <strong>exclusive</strong>, which means that the
+slot must not be available to trigger to producer. A required slot can then
+be <strong>fault_tolerant</strong>, i.e. failed slots are still considered for joining
+operation, otherwise a failed input slot make stale all produced slots.
+This differentiation is needed to handle proxies.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Filters</dt>
+<dd>Filters are applied to the slots’ key to restrict the Producer activities
+to a narrower set of slots.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Provided slots</dt>
+<dd>The outputs that the producer commits to provided. The producer assigns to
+each output slot a priority. No other producer may not output the same slot
+with equal priority.</dd>
+</dl>
+</li>
+</ol>
+<p>Furthermore, each running producer is identified by a unique id or <strong>pid</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The “Optional Slots” have been <strong>removed</strong>. That behavior can be
+simulating adding new producers having those optional slots as required.</p>
+</div>
+<div class="section" id="producer-states">
+<h3>Producer states<a class="headerlink" href="#producer-states" title="Permalink to this headline">¶</a></h3>
+<p>The diagram below shows the state diagram for the producer:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <strong>scheduled</strong> state was introduced to handle methodologies
+based on aggregation of data (for example proxy). For those, it is
+pointless kicking-off new producers as soon as new data is available.
+Better to schedule, i.e. delay, the processing for a while as very
+likely new data will become available in the meanwhile.</p>
+</div>
+<a class="reference internal image-reference" href="_images/prod_states.png"><img alt="_images/prod_states.png" class="align-center" src="_images/prod_states.png" style="width: 616.5px; height: 368.25px;" /></a>
+</div>
+<div class="section" id="id1">
+<h3>Brainstorming<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The producer is a template for actual running methodologies. It establishes
+relationship with data and how slots are aggregated. But running producers are
+<em>instance</em> of the producer template.</p>
+</div>
+<div class="section" id="producer-types">
+<h3>Producer types<a class="headerlink" href="#producer-types" title="Permalink to this headline">¶</a></h3>
+<p>There are different type of producers:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Demoniac producers</dt>
+<dd>This producer is constantly running in the background. Example of this type
+of producers is the <em>Totem Producer</em>, which continuously polls for new data
+from Totem</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Non-demoniac producers</dt>
+<dd>They have limited life span and terminate once all output slots are produced</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="producer-output">
+<h3>Producer output<a class="headerlink" href="#producer-output" title="Permalink to this headline">¶</a></h3>
+<p>Apart from the output slots, the data generated by the processing, the producer
+must return the input slots’ used for the production of each output slot.
+This is needed to build a dependency tree. Indeed, once the producer output is
+processed and output slots’ stored in the MRP table, the dependency tree
+SLOT_TREE must be updated accordingly.</p>
+</div>
+<div class="section" id="producer-proxy">
+<h3>Producer Proxy<a class="headerlink" href="#producer-proxy" title="Permalink to this headline">¶</a></h3>
+<p>All producers are executed through a common interface called <em>Producer Proxy</em>.
+Proxies are divided into</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Multi-threaded (MT) Proxies</dt>
+<dd>Producers are not executed in a different process. For example, producers
+which simply aggregates or filters data can be run in a separated thread.
+Note that producers accessing analytic funcionality (CAL, Zuul) may not be
+multi-treaded producers</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Multi-processing (MP) Proxies</dt>
+<dd>Producers are executed in their own process and potentially in a different
+machines</dd>
+</dl>
+</li>
+</ul>
+<p>The Proxy is responsible for join together all the slots needed for the producer to run.
+A set on joined slots constitute an <em>parcel</em>.
+An parcel is a collection of slots required to produce at least one output slot. For example, implied volatility and forward for asset A constitutes a parcel for the volatiity fitting producer</p>
+<p>A further differentiation is in</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><em>Independent</em> Proxies</dt>
+<dd>Producers are executed as soon as parcels are available, but subject to batch
+sizes MIN_BATCH.</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add example of Independent Proxies</p>
+</div>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><em>Dependent</em> Proxies</dt>
+<dd>Producers are triggered once all the input slots’ producers are terminated.
+This type of proxy is needed to execute methodologies based on the whole
+aggregated data, for example calculation of VarSwapVolBasis. For Dependent
+Proxies MIN_BATCH=9999</dd>
+</dl>
+</li>
+</ul>
+<p>In order for Proxy to work, they must:</p>
+<ul class="simple">
+<li>Receive notification of changes in status of required and optional slots</li>
+<li>Aggregate the slots into parcels.</li>
+<li>Trigger the actual producer once a set of conditions are met</li>
+</ul>
+<p>The conditions to be satisfied to trigger a calculation are:</p>
+<ul class="simple">
+<li>The number of available parcels are more than MIN_BATCH &gt; 0.</li>
+<li>The number of available parcels is less than MIN_BATCH but the parcels have been
+available for more than MAX_WAIT_TIME.</li>
+<li>The proxy is Dependent and all the input slots’ producers have terminated</li>
+</ul>
+</div>
+<div class="section" id="a-journey-inside-the-producer-life">
+<h3>A journey inside the producer life!<a class="headerlink" href="#a-journey-inside-the-producer-life" title="Permalink to this headline">¶</a></h3>
+<p>A slot is completed. It notifies this to the producer, which is one of the
+listeners, by communicating the sid.
+The producer acknowledges it (do we really need this? <strong>Yes I do!</strong> This is
+required to sort out the issue with notifying producer with updated data) and
+registers the
+new available data. It then checks whether it has received the required number
+of slots. If it does, then parcel is sent for processing. Now, it can happen
+that one of the input slots becomes invalid, or than a new optional slot
+becomes available. In this case the producer is inhibited. A signal is sent
+to the running producer. Once the producer returns the output, either because
+it stopped processing upon inhibition signal or because it terminated is job,
+that output is simply neglected but the output slot must be set to <strong>invalid.</strong>
+Why we need this? Not sure, let’s assume we need to flag the failure.</p>
+</div>
+<div class="section" id="joining-slots-into-parcels-proposal">
+<h3>Joining slots into parcels - proposal<a class="headerlink" href="#joining-slots-into-parcels-proposal" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>a slot is received</li>
+<li>if the new slow has higher priority that same slot already
+stored in the parcels_table, then the new slot is inserted</li>
+<li>consider all the producers affected</li>
+<li>join the required slots together</li>
+<li><strong>projects</strong> the keys on the producer aggregation keys.
+This is the key point: we know upfront which producers are affected</li>
+<li>select all the slots with keys on each distinct projection</li>
+<li>If a producer with that aggregation still running then inhibits it before
+starting the new one</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">steps 2-6 must be in a separate function, which may be possible to
+call for example by a scheduler.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">to joining at step 3 may not be required, but at the moment it
+seems required to process batches of different slots, for example
+for proxies calculation</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">A tricky aspect is that the calculation is triggered by an event!
+So for example this makes difficult to restart from a crash.
+This can be addressed leveraging on the slot <strong>updated</strong> status. So
+slots which are <strong>pending</strong> can have their status overridden to
+<strong>updated</strong>.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="varswapvolbasis-calculation">
+<h4>VarSwapVolBasis calculation<a class="headerlink" href="#varswapvolbasis-calculation" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">required_slots</span> <span class="o">=</span> <span class="p">(</span><span class="n">Totem</span><span class="o">.</span><span class="n">VarSwapVolBasis</span><span class="p">,)</span>
+<span class="n">output_slots</span> <span class="o">=</span> <span class="p">(</span><span class="n">Totem</span><span class="o">.</span><span class="n">VarSwapVolBasisProxy</span><span class="p">,)</span>
+<span class="n">producer_key</span> <span class="o">=</span> <span class="s1">&#39;product_type|region&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The MRPR database, slots and producers</a><ul>
+<li><a class="reference internal" href="#slot">Slot</a><ul>
+<li><a class="reference internal" href="#slot-types">Slot types</a></li>
+<li><a class="reference internal" href="#slots-states">Slots states</a></li>
+<li><a class="reference internal" href="#brainstorming">Brainstorming</a></li>
+<li><a class="reference internal" href="#the-sid">The SID</a></li>
+<li><a class="reference internal" href="#the-listeners">The Listeners</a></li>
+<li><a class="reference internal" href="#a-journey-inside-the-slot-life">A journey inside the slot life!</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#producer">Producer</a><ul>
+<li><a class="reference internal" href="#producer-states">Producer states</a></li>
+<li><a class="reference internal" href="#id1">Brainstorming</a></li>
+<li><a class="reference internal" href="#producer-types">Producer types</a></li>
+<li><a class="reference internal" href="#producer-output">Producer output</a></li>
+<li><a class="reference internal" href="#producer-proxy">Producer Proxy</a></li>
+<li><a class="reference internal" href="#a-journey-inside-the-producer-life">A journey inside the producer life!</a></li>
+<li><a class="reference internal" href="#joining-slots-into-parcels-proposal">Joining slots into parcels - proposal</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#varswapvolbasis-calculation">VarSwapVolBasis calculation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Aim and basic specifications of the Autofit system</a></li>
+      <li>Next: <a href="mrb.html" title="next chapter">MRP DB</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/slot_prod.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Renzo Tiranti.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/slot_prod.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

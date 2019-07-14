@@ -1,0 +1,23 @@
+Totem.European.Price:
+    key: ric
+    priority: 0
+    bundle: False
+Totem.European.Forward:
+    key: ric
+    priority: 0
+    bundle: False
+Totem.European.ImpliedVolatility:
+    key: ric
+    priority: 0
+    bundle: False
+Vanilla_European.Dividends:
+    key: ric
+    priority: 0
+    bundle: False
+Totem.European.ProductRate:
+    key: ric
+    priority: 0
+Totem.European.ImpliedVolatility:
+    key: ric
+    priority: 0
+

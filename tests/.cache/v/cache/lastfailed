@@ -1,0 +1,5 @@
+{
+  "test_models.py::TestSlot::test_slot_creation": true, 
+  "test_proxy.py::TestCase": true, 
+  "test_proxy.py::TestSlot::test_start_producer": true
+}

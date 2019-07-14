@@ -1,0 +1,11 @@
+===================================
+Slots and Producers
+===================================
+
+The system is based on two abstractions of data and processing: *slots* and *producers*
+
+Slot
+	An abstraction of a collection of homogeneous data, which is identified by a string and whose data is indicaed by a date and a collection of suplementary keys
+
+Producer
+	A 
