@@ -3,6 +3,7 @@ import datetime as dt
 import json
 from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, or_, and_, Table, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy_fsm import FSMField, transition
@@ -242,6 +243,10 @@ class Producer(Base):
         return "<Producer(pid='%s', pname='%s', keys='%s', " \
                "args='%s', date='%s', state='%s', last_updated='%s')>" % (self.pid, self.pname, self.keys, self.args,
                                                                           self.date, self.state, self.last_updated)
+
+    @hybrid_property
+    def delayed_by(self):
+        return dt.datetime.utcnow() - self.last_updated
 
     @transition(source=ProducerStatesEnum.void, target=ProducerStatesEnum.scheduled)
     def scheduled(self):

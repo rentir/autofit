@@ -180,12 +180,15 @@ def schedule_producers():
 
 def start_producers():
     session_ = get_session()
-    for producer in session_.query(Producer).filter(Producer.pending()):
-        oproducer = net.producers[producer.pname].obj
-        if dt.datetime.utcnow() - producer.last_updated > dt.timedelta(seconds=oproducer.delay):
-            logger.info("STARTING scheduled producer %s" % producer.pname)
-            execute(producer)
-            producer.running.set()
-        else:
-            logger.info("Scheduled producer %s is postponed" % producer)
+    pnames = [x[0] for x in session_.query(Producer.pname).filter(Producer.pending()).distinct()]
+    for pname in pnames:
+        pobj = net.producers[pname].obj
+        batch_size = pobj.batch_size
+        min_delay = dt.timedelta(seconds=pobj.delay)
+        producers = (session_.query(Producer).filter(Producer.pending()).
+                     filter(Producer.pname == pname).filter(Producer.delayed_by > min_delay))
+        for idx in range(0, len(producers), batch_size):
+            execute(producers[idx:(idx+batch_size)])
+            for p in producers:
+                p.running.set()
     session_.commit()

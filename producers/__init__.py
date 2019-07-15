@@ -22,13 +22,14 @@ class RequiredSlot(object):
 
 class _ProducerBase(object):
 
-    def __init__(self, name, requires, provides, priority, filters, delay, exclusive):
+    def __init__(self, name, requires, provides, priority, filters, delay, batch_size, exclusive):
         self.name = name
         self.requires = requires if requires else []
         self.provides = provides
         self.priority = priority
         self.filters = filters
         self.delay = delay
+        self.batch_size = batch_size or 1
         self.exclusive = exclusive
         network.link_producer(self)
 
@@ -42,14 +43,15 @@ class Daemon(_ProducerBase):
 
     def __init__(self, name, provides):
         super(Daemon, self).__init__(name=name, requires=None, provides=provides, priority=0,
-                                     filters={}, delay=0, exclusive=False)
+                                     filters={}, delay=0, batch_size=None, exclusive=False)
 
 
 class Producer(_ProducerBase):
 
-    def __init__(self, name, requires, provides, priority, filters=None, delay=None, exclusive=True):
+    def __init__(self, name, requires, provides, priority, filters=None, delay=None, batch_size=None, exclusive=True):
         super(Producer, self).__init__(name=name, requires=requires, provides=provides, priority=priority,
-                                       filters=filters or [], delay=delay or 0, exclusive=exclusive)
+                                       filters=filters or [], batch_size=batch_size, delay=delay or 0,
+                                       exclusive=exclusive)
 
 
 class JoinedSlot(object):
