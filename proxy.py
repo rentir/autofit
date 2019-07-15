@@ -185,10 +185,13 @@ def start_producers():
         pobj = net.producers[pname].obj
         batch_size = pobj.batch_size
         min_delay = dt.timedelta(seconds=pobj.delay)
+        threshold = dt.datetime.utcnow() - min_delay
+        logger.debug("starting Producer '%s' (batch_size=%s, delay=%s" % (pname, batch_size, min_delay))
         producers = (session_.query(Producer).filter(Producer.pending()).
-                     filter(Producer.pname == pname).filter(Producer.delayed_by > min_delay))
+                     filter(Producer.pname == pname).filter(Producer.last_updated <= threshold)).all()
+        logger.debug("%s task ready for execution" % len(producers))
         for idx in range(0, len(producers), batch_size):
             execute(producers[idx:(idx+batch_size)])
-            for p in producers:
-                p.running.set()
+            # for p in producers:
+            #     p.running.set()
     session_.commit()

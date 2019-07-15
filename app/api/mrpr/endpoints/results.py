@@ -1,5 +1,5 @@
 import logging
-
+import json
 from flask import request
 from flask_restplus import Resource
 from autofit import queue
@@ -23,5 +23,7 @@ class Result(Resource):
         """
 
         """
-        queue.put(Parcel.decode(request.data))
+        data = json.loads(request.data)
+        for content in data:
+            queue.put(Parcel.decode(content))
         return None, 201

@@ -306,10 +306,7 @@ def insert_producer(producer, slots):
     p = query.filter(or_(Producer.pending(), Producer.scheduled())).all()
     if len(p) == 0:  # uhm we need to insert it
         p = producer
-        if producers[producer.pname].obj.scheduled:
-            p.scheduled.set()
-        else:
-            p.pending.set()
+        p.pending.set()
         logger.debug("Created new producer")
         session_.add(p)
     elif len(p) > 1:

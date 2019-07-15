@@ -30,7 +30,9 @@ class _ProducerBase(object):
         self.filters = filters
         self.delay = delay
         self.batch_size = batch_size or 1
-        self.exclusive = exclusive
+        if self.batch_size < 1:
+            raise ProducerException("Producer %s: batch_size must be positive" % name)
+        self.exclusive = (exclusive is not None and exclusive)
         network.link_producer(self)
 
     @property
@@ -80,10 +82,9 @@ class Parcel(dict):
 
     @classmethod
     def decode(cls, content):
-        result = json.loads(content)
-        return cls(pname=result['pname'], pid=result['pid'],
-                   date=datetime.datetime.strptime(result['date'], '%Y-%m-%d').date(),
-                   slots=result['slots'], state=result['state'], priority=result['priority'])
+        return cls(pname=content['pname'], pid=content['pid'],
+                   date=datetime.datetime.strptime(content['date'], '%Y-%m-%d').date(),
+                   slots=content['slots'], state=content['state'], priority=content['priority'])
 
 
 import_from_package(__file__, __package__)
