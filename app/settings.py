@@ -1,6 +1,8 @@
-# Flask settings
-FLASK_SERVER_NAME = 'localhost:5000'
+# Flask
+FLASK_SERVER_PORT = 5005
+FLASK_SERVER_NAME = 'localhost:%s' % FLASK_SERVER_PORT
 FLASK_DEBUG = False  # Do not use debug mode in production
+FLASK_USE_RELOADER = False
 
 # Flask-Restplus settings
 RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'

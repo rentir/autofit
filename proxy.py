@@ -171,9 +171,9 @@ def schedule_producers():
             else:
                 logger.debug("producer '%s' is INCOMPLETE" % pname)
     for input_slot in session_.query(InputSlot).filter(InputSlot.id_.in_(ids)):
-        logger.info("Setting InputSlot.state='processed' to InputSlot.id_='%s', "
-                    "pname='%s', sname='%s', sid='%s'" % (input_slot.id_, input_slot.pname,
-                                                          input_slot.sname, input_slot.sid))
+        logger.info("InputSlot.id_='%s', "
+                    "pname='%s', sname='%s', sid='%s' was PROCESSED" % (input_slot.id_, input_slot.pname,
+                                                                        input_slot.sname, input_slot.sid))
         input_slot.processed.set()
     session_.commit()
 
@@ -192,6 +192,4 @@ def start_producers():
         logger.debug("%s task ready for execution" % len(producers))
         for idx in range(0, len(producers), batch_size):
             execute(producers[idx:(idx+batch_size)])
-            # for p in producers:
-            #     p.running.set()
-    session_.commit()
+            session_.commit()

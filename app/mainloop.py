@@ -36,6 +36,7 @@ class Loop(Thread):
         self._stop = True
 
     def run(self):
+        logger.debug("autofit.app.Loop STARTED!")
         session_ = get_session()
         while not self._stop:
             if self.queue.empty():
@@ -46,6 +47,7 @@ class Loop(Thread):
                     continue
                 pname = parcel['pname']
                 pid = parcel['pid']
+                logger.debug("Receiver data from producer with pid '%s'" % pid)
                 if pid:
                     query = session_.query(Producer).filter_by(pid=pid)
                     try:
@@ -54,7 +56,7 @@ class Loop(Thread):
                             logger.debug("Producer with pid='%s' was halted, update skipped" % pid)
                             continue
                         if not p.running():
-                            logger.error("Producer with pid='%s' in an inconsistent state" % pid)
+                            logger.error("Producer with pid='%s' in an inconsistent state '%s'" % (pid, p.state))
                             continue
                     except NoResultFound:
                         logger.exception("producer with pid='%s' does not exist" % pid)
@@ -68,7 +70,7 @@ class Loop(Thread):
                     logger.exception("non-daemon producer missing pid")
                 else:  # the producer is a daemon, set p to None
                     p = None
-                logger.debug("valid data received")
+                logger.debug("valid data received from pid='%s'" % pid)
                 date = parcel['date']
                 priority = parcel['priority']
                 if p:

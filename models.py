@@ -46,6 +46,7 @@ class ProducerStatesEnum(object):
     completed = 'completed'
     halted = 'halted'
     failed = 'failed'
+    rejected = 'rejected'
 
 
 class InputSlotStatesEnum(object):
@@ -60,6 +61,11 @@ slot_producer_association = Table('slot_producer_association', Base.metadata,
 producer_slot_association = Table('producer_slot_association', Base.metadata,
                                   Column('slot_id', Integer, ForeignKey('slots.sid')),
                                   Column('producer_id', Integer, ForeignKey('producers.pid')))
+
+
+class DictMixin(object):
+    def _asdict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 
 class Slot(Base):
@@ -118,6 +124,8 @@ def invalidate_slot(slot):
             invalidate_slot(s)
         if producer.running():
             producer.halted.set()
+        for s in producer.outputs:  # we need to recursicely invalidate
+            invalidate_slot(s)
         else:
             logger.debug("dangling product %s being removed" % producer)
             session_ = database['session']
@@ -228,7 +236,7 @@ class InputSlot(Base):
                                                            self.region, self.date, self.last_updated, self.state)
 
 
-class Producer(Base):
+class Producer(Base, DictMixin):
     __tablename__ = 'producers'
     pid = Column(String, primary_key=True, index=True, nullable=False, default=_uuid_generator)
     pname = Column(String, index=True, nullable=False)
@@ -270,11 +278,18 @@ class Producer(Base):
     def failed(self):
         pass
 
-    @transition(source=ProducerStatesEnum.running,target=ProducerStatesEnum.halted)
+    @transition(source=ProducerStatesEnum.running, target=ProducerStatesEnum.halted)
     def halted(self):
         """
         Only if the state is 'running' then it will transact to 'halted'. In all other cases, the producer data can
         be updated
+        """
+        pass
+
+    @transition(source=ProducerStatesEnum.pending, target=ProducerStatesEnum.rejected)
+    def rejected(self):
+        """
+        The worker rejected the producer execution
         """
         pass
 
@@ -319,8 +334,8 @@ def insert_producer(producer, slots):
     for slot in slots:
         if p not in slot.listeners:
             slot.listeners.append(p)
-            logger.debug("'%s' linked to ''%s'" % (p.pid, slot.sid))
-    logger.info("%s successfully inserted" % p.pid)
+            logger.debug("'%s' linked to '%s'" % (p.pid, slot.sid))
+    logger.info("'%s' successfully inserted" % p.pid)
 
 
 def create_all(conf):
