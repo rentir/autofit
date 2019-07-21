@@ -1,177 +1,30 @@
-2019-07-18 22:05:55,496 - autofit.utils - INFO - importing /home/renzo/python/autofit/slots/__init__.pyc from autofit.slots
-2019-07-18 22:05:55,497 - autofit.utils - DEBUG - importing module reports
-2019-07-18 22:05:55,497 - autofit.network - DEBUG - linking slot 'implied_fwd'
-2019-07-18 22:05:55,497 - autofit.network - DEBUG - linking slot 'implied_vol'
-2019-07-18 22:05:55,499 - autofit.utils - DEBUG - importing module parameters
-2019-07-18 22:05:55,499 - autofit.network - DEBUG - linking slot 'dividends'
-2019-07-18 22:05:55,499 - autofit.network - DEBUG - linking slot 'product_rate'
-2019-07-18 22:05:55,499 - autofit.network - DEBUG - linking slot 'volatility'
-2019-07-18 22:05:55,499 - autofit.network - DEBUG - linking slot 'varswapvolbasis'
-2019-07-18 22:05:55,499 - autofit.utils - DEBUG - importing module risks
-2019-07-18 22:05:55,500 - autofit.network - DEBUG - linking slot 'tau'
-2019-07-18 22:05:55,500 - autofit.network - DEBUG - linking slot 'delta'
-2019-07-18 22:05:55,500 - autofit.utils - DEBUG - importing module market_data
-2019-07-18 22:05:55,500 - autofit.network - DEBUG - linking slot 'european_totem'
-2019-07-18 22:05:55,500 - autofit.network - DEBUG - linking slot 'varswap_totem'
-2019-07-18 22:05:55,500 - autofit.network - DEBUG - linking slot 'volswap_totem'
-2019-07-18 22:05:55,500 - autofit.network - DEBUG - linking slot 'trs_totem'
-2019-07-18 22:05:55,501 - autofit.utils - INFO - importing /home/renzo/python/autofit/producers/__init__.pyc from autofit.producers
-2019-07-18 22:05:55,501 - autofit.utils - DEBUG - importing module parameters
-2019-07-18 22:05:55,502 - autofit.network - DEBUG - linking producer 'synthetic_fwd_fitter'
-2019-07-18 22:05:55,502 - autofit.network - DEBUG - linking producer 'vol_fitter'
-2019-07-18 22:05:55,502 - autofit.network - DEBUG - linking producer 'trs_fitter'
-2019-07-18 22:05:55,502 - autofit.network - DEBUG - linking producer 'trs_fwd_fitter'
-2019-07-18 22:05:55,503 - autofit.network - DEBUG - linking producer 'varswap_fitter'
-2019-07-18 22:05:55,503 - autofit.network - DEBUG - linking producer 'proxy_vol_fitter'
-2019-07-18 22:05:55,503 - autofit.utils - DEBUG - importing module report
-2019-07-18 22:05:55,503 - autofit.network - DEBUG - linking producer 'black_scholes_calculator'
-2019-07-18 22:05:55,503 - autofit.utils - DEBUG - importing module market_data
-2019-07-18 22:05:55,504 - autofit.network - DEBUG - linking producer 'totem_daily'
-2019-07-18 22:05:55,504 - autofit - INFO - Network was successfully linked
-2019-07-18 22:06:12,482 - autofit.utils - INFO - importing /home/renzo/python/autofit/slots/__init__.pyc from autofit.slots
-2019-07-18 22:06:12,482 - autofit.utils - DEBUG - importing module reports
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'implied_fwd'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'implied_vol'
-2019-07-18 22:06:12,483 - autofit.utils - DEBUG - importing module parameters
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'dividends'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'product_rate'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'volatility'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'varswapvolbasis'
-2019-07-18 22:06:12,483 - autofit.utils - DEBUG - importing module risks
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'tau'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'delta'
-2019-07-18 22:06:12,483 - autofit.utils - DEBUG - importing module market_data
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'european_totem'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'varswap_totem'
-2019-07-18 22:06:12,483 - autofit.network - DEBUG - linking slot 'volswap_totem'
-2019-07-18 22:06:12,484 - autofit.network - DEBUG - linking slot 'trs_totem'
-2019-07-18 22:06:12,484 - autofit.utils - INFO - importing /home/renzo/python/autofit/producers/__init__.pyc from autofit.producers
-2019-07-18 22:06:12,484 - autofit.utils - DEBUG - importing module parameters
-2019-07-18 22:06:12,484 - autofit.network - DEBUG - linking producer 'synthetic_fwd_fitter'
-2019-07-18 22:06:12,484 - autofit.network - DEBUG - linking producer 'vol_fitter'
-2019-07-18 22:06:12,484 - autofit.network - DEBUG - linking producer 'trs_fitter'
-2019-07-18 22:06:12,485 - autofit.network - DEBUG - linking producer 'trs_fwd_fitter'
-2019-07-18 22:06:12,485 - autofit.network - DEBUG - linking producer 'varswap_fitter'
-2019-07-18 22:06:12,485 - autofit.network - DEBUG - linking producer 'proxy_vol_fitter'
-2019-07-18 22:06:12,485 - autofit.utils - DEBUG - importing module report
-2019-07-18 22:06:12,485 - autofit.network - DEBUG - linking producer 'black_scholes_calculator'
-2019-07-18 22:06:12,485 - autofit.utils - DEBUG - importing module market_data
-2019-07-18 22:06:12,485 - autofit.network - DEBUG - linking producer 'totem_daily'
-2019-07-18 22:06:12,485 - autofit - INFO - Network was successfully linked
-2019-07-18 22:06:12,787 - autofit.app.mainloop - DEBUG - autofit.app.Loop STARTED!
-2019-07-18 22:06:30,887 - autofit.app.mainloop - DEBUG - Receiver data from producer with pid ''
-2019-07-18 22:06:30,888 - autofit.app.mainloop - DEBUG - valid data received from pid=''
-2019-07-18 22:06:30,888 - autofit.models - DEBUG - inserting slot None
-2019-07-18 22:06:30,892 - autofit.models - DEBUG - The slot is NEW
-2019-07-18 22:06:30,893 - autofit.proxy - DEBUG - broadcasting to 'black_scholes_calculator'
-2019-07-18 22:06:30,898 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='black_scholes_calculator', sname='european_totem', sid='413ec08a6da0438abbfad9e01d30456e', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:31,039 - autofit.proxy - DEBUG - acknowledge received from 'black_scholes_calculator' with result 'True'
-2019-07-18 22:06:31,039 - autofit.proxy - DEBUG - pending 0 acknowledgments
-2019-07-18 22:06:31,160 - autofit.proxy - DEBUG - joining producer black_scholes_calculator
-2019-07-18 22:06:31,175 - autofit.proxy - DEBUG - added id_ 1
-2019-07-18 22:06:31,184 - autofit.proxy - DEBUG - producer 'black_scholes_calculator' is READY
-2019-07-18 22:06:31,185 - autofit.models - INFO - Inserting producer 'black_scholes_calculator'
-2019-07-18 22:06:31,190 - autofit.models - DEBUG - Created new producer
-2019-07-18 22:06:31,194 - autofit.models - DEBUG - '5010e6b7c922409fb0a8bf77da72891e' linked to '413ec08a6da0438abbfad9e01d30456e'
-2019-07-18 22:06:31,194 - autofit.models - INFO - '5010e6b7c922409fb0a8bf77da72891e' successfully inserted
-2019-07-18 22:06:31,197 - autofit.proxy - INFO - InputSlot.id_='1', pname='black_scholes_calculator', sname='european_totem', sid='413ec08a6da0438abbfad9e01d30456e' was PROCESSED
-2019-07-18 22:06:31,316 - autofit.proxy - DEBUG - starting Producer 'black_scholes_calculator' (batch_size=1, delay=0:00:00
-2019-07-18 22:06:31,319 - autofit.proxy - DEBUG - 1 task ready for execution
-2019-07-18 22:06:31,320 - autofit.launcher - DEBUG - Producer 'black_scholes_calculator' with pid '5010e6b7c922409fb0a8bf77da72891e'
-2019-07-18 22:06:31,409 - autofit.launcher - DEBUG - POST request return status_code 200
-2019-07-18 22:06:31,409 - autofit.launcher - DEBUG - Producer with pid='5010e6b7c922409fb0a8bf77da72891e' was ACCEPTED
-2019-07-18 22:06:35,545 - autofit.app.mainloop - DEBUG - Receiver data from producer with pid '5010e6b7c922409fb0a8bf77da72891e'
-2019-07-18 22:06:35,548 - autofit.app.mainloop - DEBUG - valid data received from pid='5010e6b7c922409fb0a8bf77da72891e'
-2019-07-18 22:06:35,550 - autofit.models - DEBUG - inserting slot None
-2019-07-18 22:06:35,552 - autofit.models - DEBUG - The slot is NEW
-2019-07-18 22:06:35,554 - autofit.proxy - DEBUG - broadcasting to 'synthetic_fwd_fitter'
-2019-07-18 22:06:35,558 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='synthetic_fwd_fitter', sname='implied_fwd', sid='e3ec24668fb741039c1250b13452ad34', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:35,684 - autofit.proxy - DEBUG - acknowledge received from 'synthetic_fwd_fitter' with result 'True'
-2019-07-18 22:06:35,684 - autofit.proxy - DEBUG - pending 2 acknowledgments
-2019-07-18 22:06:35,685 - autofit.proxy - DEBUG - broadcasting to 'vol_fitter'
-2019-07-18 22:06:35,692 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='vol_fitter', sname='implied_fwd', sid='e3ec24668fb741039c1250b13452ad34', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:35,783 - autofit.proxy - DEBUG - acknowledge received from 'vol_fitter' with result 'True'
-2019-07-18 22:06:35,784 - autofit.proxy - DEBUG - pending 1 acknowledgments
-2019-07-18 22:06:35,784 - autofit.proxy - DEBUG - broadcasting to 'trs_fwd_fitter'
-2019-07-18 22:06:35,787 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='trs_fwd_fitter', sname='implied_fwd', sid='e3ec24668fb741039c1250b13452ad34', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:35,882 - autofit.proxy - DEBUG - acknowledge received from 'trs_fwd_fitter' with result 'True'
-2019-07-18 22:06:35,883 - autofit.proxy - DEBUG - pending 0 acknowledgments
-2019-07-18 22:06:35,968 - autofit.models - DEBUG - inserting slot None
-2019-07-18 22:06:35,974 - autofit.models - DEBUG - The slot is NEW
-2019-07-18 22:06:35,983 - autofit.proxy - DEBUG - broadcasting to 'proxy_vol_fitter'
-2019-07-18 22:06:35,986 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='proxy_vol_fitter', sname='implied_vol', sid='91b41af03b884a738d54f01d11fbe091', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:36,084 - autofit.proxy - DEBUG - acknowledge received from 'proxy_vol_fitter' with result 'True'
-2019-07-18 22:06:36,084 - autofit.proxy - DEBUG - pending 1 acknowledgments
-2019-07-18 22:06:36,084 - autofit.proxy - DEBUG - broadcasting to 'vol_fitter'
-2019-07-18 22:06:36,092 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='vol_fitter', sname='implied_vol', sid='91b41af03b884a738d54f01d11fbe091', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:36,182 - autofit.proxy - DEBUG - acknowledge received from 'vol_fitter' with result 'True'
-2019-07-18 22:06:36,182 - autofit.proxy - DEBUG - pending 0 acknowledgments
-2019-07-18 22:06:36,293 - autofit.proxy - DEBUG - joining producer proxy_vol_fitter
-2019-07-18 22:06:36,316 - autofit.proxy - DEBUG - added id_ 5
-2019-07-18 22:06:36,322 - autofit.proxy - DEBUG - producer 'proxy_vol_fitter' is INCOMPLETE
-2019-07-18 22:06:36,322 - autofit.proxy - DEBUG - joining producer synthetic_fwd_fitter
-2019-07-18 22:06:36,331 - autofit.proxy - DEBUG - added id_ 2
-2019-07-18 22:06:36,337 - autofit.proxy - DEBUG - producer 'synthetic_fwd_fitter' is READY
-2019-07-18 22:06:36,338 - autofit.models - INFO - Inserting producer 'synthetic_fwd_fitter'
-2019-07-18 22:06:36,340 - autofit.models - DEBUG - Created new producer
-2019-07-18 22:06:36,341 - autofit.models - DEBUG - '6f1be4a72aeb4d37ad262a0b3658739a' linked to 'e3ec24668fb741039c1250b13452ad34'
-2019-07-18 22:06:36,341 - autofit.models - INFO - '6f1be4a72aeb4d37ad262a0b3658739a' successfully inserted
-2019-07-18 22:06:36,342 - autofit.proxy - DEBUG - joining producer trs_fwd_fitter
-2019-07-18 22:06:36,351 - autofit.proxy - DEBUG - added id_ 4
-2019-07-18 22:06:36,365 - autofit.proxy - DEBUG - producer 'trs_fwd_fitter' is INCOMPLETE
-2019-07-18 22:06:36,365 - autofit.proxy - DEBUG - joining producer vol_fitter
-2019-07-18 22:06:36,373 - autofit.proxy - DEBUG - added id_ 3
-2019-07-18 22:06:36,379 - autofit.proxy - DEBUG - added id_ 6
-2019-07-18 22:06:36,388 - autofit.proxy - DEBUG - producer 'vol_fitter' is READY
-2019-07-18 22:06:36,389 - autofit.models - INFO - Inserting producer 'vol_fitter'
-2019-07-18 22:06:36,391 - autofit.models - DEBUG - Created new producer
-2019-07-18 22:06:36,392 - autofit.models - DEBUG - '40fa1c317ff84ac5a77d43ba7023c168' linked to '91b41af03b884a738d54f01d11fbe091'
-2019-07-18 22:06:36,392 - autofit.models - DEBUG - '40fa1c317ff84ac5a77d43ba7023c168' linked to 'e3ec24668fb741039c1250b13452ad34'
-2019-07-18 22:06:36,392 - autofit.models - INFO - '40fa1c317ff84ac5a77d43ba7023c168' successfully inserted
-2019-07-18 22:06:36,395 - autofit.proxy - INFO - InputSlot.id_='2', pname='synthetic_fwd_fitter', sname='implied_fwd', sid='e3ec24668fb741039c1250b13452ad34' was PROCESSED
-2019-07-18 22:06:36,395 - autofit.proxy - INFO - InputSlot.id_='3', pname='vol_fitter', sname='implied_fwd', sid='e3ec24668fb741039c1250b13452ad34' was PROCESSED
-2019-07-18 22:06:36,395 - autofit.proxy - INFO - InputSlot.id_='4', pname='trs_fwd_fitter', sname='implied_fwd', sid='e3ec24668fb741039c1250b13452ad34' was PROCESSED
-2019-07-18 22:06:36,396 - autofit.proxy - INFO - InputSlot.id_='5', pname='proxy_vol_fitter', sname='implied_vol', sid='91b41af03b884a738d54f01d11fbe091' was PROCESSED
-2019-07-18 22:06:36,396 - autofit.proxy - INFO - InputSlot.id_='6', pname='vol_fitter', sname='implied_vol', sid='91b41af03b884a738d54f01d11fbe091' was PROCESSED
-2019-07-18 22:06:36,513 - autofit.proxy - DEBUG - starting Producer 'synthetic_fwd_fitter' (batch_size=1, delay=0:00:00
-2019-07-18 22:06:36,514 - autofit.proxy - DEBUG - 1 task ready for execution
-2019-07-18 22:06:36,514 - autofit.launcher - DEBUG - Producer 'synthetic_fwd_fitter' with pid '6f1be4a72aeb4d37ad262a0b3658739a'
-2019-07-18 22:06:36,576 - autofit.launcher - DEBUG - POST request return status_code 200
-2019-07-18 22:06:36,577 - autofit.launcher - DEBUG - Producer with pid='6f1be4a72aeb4d37ad262a0b3658739a' was ACCEPTED
-2019-07-18 22:06:36,700 - autofit.proxy - DEBUG - starting Producer 'vol_fitter' (batch_size=1, delay=0:00:00
-2019-07-18 22:06:36,704 - autofit.proxy - DEBUG - 1 task ready for execution
-2019-07-18 22:06:36,704 - autofit.launcher - DEBUG - Producer 'vol_fitter' with pid '40fa1c317ff84ac5a77d43ba7023c168'
-2019-07-18 22:06:36,768 - autofit.launcher - DEBUG - POST request return status_code 200
-2019-07-18 22:06:36,768 - autofit.launcher - DEBUG - Producer with pid='40fa1c317ff84ac5a77d43ba7023c168' was ACCEPTED
-2019-07-18 22:06:38,967 - autofit.app.mainloop - DEBUG - Receiver data from producer with pid '6f1be4a72aeb4d37ad262a0b3658739a'
-2019-07-18 22:06:38,971 - autofit.app.mainloop - DEBUG - valid data received from pid='6f1be4a72aeb4d37ad262a0b3658739a'
-2019-07-18 22:06:38,973 - autofit.models - DEBUG - inserting slot None
-2019-07-18 22:06:38,974 - autofit.models - DEBUG - The slot is NEW
-2019-07-18 22:06:38,976 - autofit.proxy - DEBUG - broadcasting to 'varswap_fitter'
-2019-07-18 22:06:38,979 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='varswap_fitter', sname='dividends', sid='8d913a42a81f4d2193cbd744b6ef6b2f', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:39,113 - autofit.proxy - DEBUG - acknowledge received from 'varswap_fitter' with result 'True'
-2019-07-18 22:06:39,113 - autofit.proxy - DEBUG - pending 0 acknowledgments
-2019-07-18 22:06:39,189 - autofit.models - DEBUG - inserting slot None
-2019-07-18 22:06:39,192 - autofit.models - DEBUG - The slot is NEW
-2019-07-18 22:06:39,194 - autofit.proxy - DEBUG - broadcasting to 'varswap_fitter'
-2019-07-18 22:06:39,198 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='varswap_fitter', sname='product_rate', sid='baf5a37bfb044d65a1a81526e94703b1', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:39,291 - autofit.proxy - DEBUG - acknowledge received from 'varswap_fitter' with result 'True'
-2019-07-18 22:06:39,291 - autofit.proxy - DEBUG - pending 0 acknowledgments
-2019-07-18 22:06:39,368 - autofit.proxy - DEBUG - joining producer varswap_fitter
-2019-07-18 22:06:39,384 - autofit.proxy - DEBUG - added id_ 7
-2019-07-18 22:06:39,390 - autofit.proxy - DEBUG - added id_ 8
-2019-07-18 22:06:39,406 - autofit.proxy - DEBUG - producer 'varswap_fitter' is INCOMPLETE
-2019-07-18 22:06:39,407 - autofit.proxy - INFO - InputSlot.id_='7', pname='varswap_fitter', sname='dividends', sid='8d913a42a81f4d2193cbd744b6ef6b2f' was PROCESSED
-2019-07-18 22:06:39,407 - autofit.proxy - INFO - InputSlot.id_='8', pname='varswap_fitter', sname='product_rate', sid='baf5a37bfb044d65a1a81526e94703b1' was PROCESSED
-2019-07-18 22:06:39,493 - autofit.app.mainloop - DEBUG - Receiver data from producer with pid '40fa1c317ff84ac5a77d43ba7023c168'
-2019-07-18 22:06:39,497 - autofit.app.mainloop - DEBUG - valid data received from pid='40fa1c317ff84ac5a77d43ba7023c168'
-2019-07-18 22:06:39,501 - autofit.models - DEBUG - inserting slot None
-2019-07-18 22:06:39,503 - autofit.models - DEBUG - The slot is NEW
-2019-07-18 22:06:39,504 - autofit.proxy - DEBUG - broadcasting to 'varswap_fitter'
-2019-07-18 22:06:39,508 - autofit.proxy - DEBUG - InputSlot <InputSlot(id_=None, pname='varswap_fitter', sname='volatility', sid='6ad4e38d2409414b85503938f8b85684', id1='1', ccy1='EUR', id2='None', ccy2='None', class_='equity', type_='index'', region='euro', date=2019-06-24, last_updated=None, state='None'') was created
-2019-07-18 22:06:39,602 - autofit.proxy - DEBUG - acknowledge received from 'varswap_fitter' with result 'True'
-2019-07-18 22:06:39,602 - autofit.proxy - DEBUG - pending 0 acknowledgments
-2019-07-18 22:06:39,679 - autofit.proxy - DEBUG - joining producer varswap_fitter
-2019-07-18 22:06:39,688 - autofit.proxy - DEBUG - added id_ 9
-2019-07-18 22:06:39,718 - autofit.proxy - DEBUG - producer 'varswap_fitter' is INCOMPLETE
-2019-07-18 22:06:39,719 - autofit.proxy - INFO - InputSlot.id_='9', pname='varswap_fitter', sname='volatility', sid='6ad4e38d2409414b85503938f8b85684' was PROCESSED
+2019-07-21 16:34:59,754 - autofit.utils - INFO - importing /home/renzo/python/autofit/slots/__init__.pyc from autofit.slots
+2019-07-21 16:34:59,756 - autofit.utils - DEBUG - importing module reports
+2019-07-21 16:34:59,756 - autofit.network - DEBUG - linking slot 'implied_fwd'
+2019-07-21 16:34:59,756 - autofit.network - DEBUG - linking slot 'implied_vol'
+2019-07-21 16:34:59,756 - autofit.utils - DEBUG - importing module parameters
+2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'dividends'
+2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'product_rate'
+2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'volatility'
+2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'varswapvolbasis'
+2019-07-21 16:34:59,757 - autofit.utils - DEBUG - importing module risks
+2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'tau'
+2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'delta'
+2019-07-21 16:34:59,757 - autofit.utils - DEBUG - importing module market_data
+2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'european_totem'
+2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'varswap_totem'
+2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'volswap_totem'
+2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'trs_totem'
+2019-07-21 16:34:59,759 - autofit.utils - INFO - importing /home/renzo/python/autofit/producers/__init__.pyc from autofit.producers
+2019-07-21 16:34:59,759 - autofit.utils - DEBUG - importing module parameters
+2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'synthetic_fwd_fitter'
+2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'vol_fitter'
+2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'trs_fitter'
+2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'trs_fwd_fitter'
+2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'varswap_fitter'
+2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'proxy_vol_fitter'
+2019-07-21 16:34:59,761 - autofit.utils - DEBUG - importing module report
+2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'black_scholes_calculator'
+2019-07-21 16:34:59,761 - autofit.utils - DEBUG - importing module market_data
+2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'totem_daily'
+2019-07-21 16:34:59,762 - autofit - INFO - Network was successfully linked

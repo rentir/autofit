@@ -52,7 +52,8 @@ def notify(slot, producer, callback):
         q = q.filter(InputSlot.__dict__[k] == v)
     try:
         ps = q.one()
-        ps.sid = slot.sid
+        ps.sid = slot.sid  # should not change the InputSlot status?
+        ps.updated.set()
         logger.debug('InputSlot %s was updated' % ps)
     except MultipleResultsFound as e:
         logger.exception(str(e))
@@ -68,12 +69,12 @@ def notify(slot, producer, callback):
 
 
 def broadcast(slot):
-    if slot.name in _broadcasting_slots:
-        raise BroadcastingError()
+    # if slot.name in _broadcasting_slots:
+    #     raise BroadcastingError()
     affected = net.slots[slot.name].listeners
     _broadcasting_slots[slot.name] = len(affected)
     for producer in affected:
-        logger.debug("broadcasting to '%s'" % producer.obj.name)
+        logger.debug("notifying producers '%s'" % producer.obj.name)
         notify(slot, producer.obj, acknowledge(slot))
 
 

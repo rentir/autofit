@@ -211,7 +211,6 @@ class InputSlot(Base):
     ccy1 = Column(String, index=True, nullable=True)
     id2 = Column(String, index=True, nullable=True)
     ccy2 = Column(String, index=True, nullable=True)
-    ccy2 = Column(String, index=True, nullable=True)
     class_ = Column(String, index=False, nullable=True)
     type_ = Column(String, index=False, nullable=True)
     region = Column(String, index=True, nullable=True)
