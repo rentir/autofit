@@ -1,30 +1,60 @@
-2019-07-21 16:34:59,754 - autofit.utils - INFO - importing /home/renzo/python/autofit/slots/__init__.pyc from autofit.slots
-2019-07-21 16:34:59,756 - autofit.utils - DEBUG - importing module reports
-2019-07-21 16:34:59,756 - autofit.network - DEBUG - linking slot 'implied_fwd'
-2019-07-21 16:34:59,756 - autofit.network - DEBUG - linking slot 'implied_vol'
-2019-07-21 16:34:59,756 - autofit.utils - DEBUG - importing module parameters
-2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'dividends'
-2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'product_rate'
-2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'volatility'
-2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'varswapvolbasis'
-2019-07-21 16:34:59,757 - autofit.utils - DEBUG - importing module risks
-2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'tau'
-2019-07-21 16:34:59,757 - autofit.network - DEBUG - linking slot 'delta'
-2019-07-21 16:34:59,757 - autofit.utils - DEBUG - importing module market_data
-2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'european_totem'
-2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'varswap_totem'
-2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'volswap_totem'
-2019-07-21 16:34:59,758 - autofit.network - DEBUG - linking slot 'trs_totem'
-2019-07-21 16:34:59,759 - autofit.utils - INFO - importing /home/renzo/python/autofit/producers/__init__.pyc from autofit.producers
-2019-07-21 16:34:59,759 - autofit.utils - DEBUG - importing module parameters
-2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'synthetic_fwd_fitter'
-2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'vol_fitter'
-2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'trs_fitter'
-2019-07-21 16:34:59,760 - autofit.network - DEBUG - linking producer 'trs_fwd_fitter'
-2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'varswap_fitter'
-2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'proxy_vol_fitter'
-2019-07-21 16:34:59,761 - autofit.utils - DEBUG - importing module report
-2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'black_scholes_calculator'
-2019-07-21 16:34:59,761 - autofit.utils - DEBUG - importing module market_data
-2019-07-21 16:34:59,761 - autofit.network - DEBUG - linking producer 'totem_daily'
-2019-07-21 16:34:59,762 - autofit - INFO - Network was successfully linked
+2019-07-22 23:35:01,780 - autofit.utils - INFO - importing /home/renzo/python/autofit/slots/__init__.pyc from autofit.slots
+2019-07-22 23:35:01,782 - autofit.utils - DEBUG - importing module reports
+2019-07-22 23:35:01,782 - autofit.network - DEBUG - linking slot 'implied_fwd'
+2019-07-22 23:35:01,782 - autofit.network - DEBUG - linking slot 'implied_vol'
+2019-07-22 23:35:01,782 - autofit.utils - DEBUG - importing module parameters
+2019-07-22 23:35:01,782 - autofit.network - DEBUG - linking slot 'dividends'
+2019-07-22 23:35:01,782 - autofit.network - DEBUG - linking slot 'product_rate'
+2019-07-22 23:35:01,783 - autofit.network - DEBUG - linking slot 'volatility'
+2019-07-22 23:35:01,783 - autofit.network - DEBUG - linking slot 'varswapvolbasis'
+2019-07-22 23:35:01,783 - autofit.utils - DEBUG - importing module risks
+2019-07-22 23:35:01,783 - autofit.network - DEBUG - linking slot 'tau'
+2019-07-22 23:35:01,783 - autofit.network - DEBUG - linking slot 'delta'
+2019-07-22 23:35:01,783 - autofit.utils - DEBUG - importing module market_data
+2019-07-22 23:35:01,783 - autofit.network - DEBUG - linking slot 'european_totem'
+2019-07-22 23:35:01,784 - autofit.network - DEBUG - linking slot 'varswap_totem'
+2019-07-22 23:35:01,784 - autofit.network - DEBUG - linking slot 'volswap_totem'
+2019-07-22 23:35:01,784 - autofit.network - DEBUG - linking slot 'trs_totem'
+2019-07-22 23:35:01,784 - autofit.utils - INFO - importing /home/renzo/python/autofit/producers/__init__.pyc from autofit.producers
+2019-07-22 23:35:01,785 - autofit.utils - DEBUG - importing module parameters
+2019-07-22 23:35:01,785 - autofit.network - DEBUG - linking producer 'synthetic_fwd_fitter'
+2019-07-22 23:35:01,786 - autofit.network - DEBUG - linking producer 'vol_fitter'
+2019-07-22 23:35:01,786 - autofit.network - DEBUG - linking producer 'trs_fitter'
+2019-07-22 23:35:01,786 - autofit.network - DEBUG - linking producer 'trs_fwd_fitter'
+2019-07-22 23:35:01,786 - autofit.network - DEBUG - linking producer 'varswap_fitter'
+2019-07-22 23:35:01,786 - autofit.network - DEBUG - linking producer 'proxy_vol_fitter'
+2019-07-22 23:35:01,787 - autofit.utils - DEBUG - importing module report
+2019-07-22 23:35:01,787 - autofit.network - DEBUG - linking producer 'black_scholes_calculator'
+2019-07-22 23:35:01,787 - autofit.utils - DEBUG - importing module market_data
+2019-07-22 23:35:01,787 - autofit.network - DEBUG - linking producer 'totem_daily'
+2019-07-22 23:35:01,787 - autofit - INFO - Network was successfully linked
+2019-07-22 23:37:12,065 - autofit.utils - INFO - importing /home/renzo/python/autofit/slots/__init__.pyc from autofit.slots
+2019-07-22 23:37:12,065 - autofit.utils - DEBUG - importing module reports
+2019-07-22 23:37:12,067 - autofit.network - DEBUG - linking slot 'implied_fwd'
+2019-07-22 23:37:12,067 - autofit.network - DEBUG - linking slot 'implied_vol'
+2019-07-22 23:37:12,067 - autofit.utils - DEBUG - importing module parameters
+2019-07-22 23:37:12,067 - autofit.network - DEBUG - linking slot 'dividends'
+2019-07-22 23:37:12,068 - autofit.network - DEBUG - linking slot 'product_rate'
+2019-07-22 23:37:12,068 - autofit.network - DEBUG - linking slot 'volatility'
+2019-07-22 23:37:12,068 - autofit.network - DEBUG - linking slot 'varswapvolbasis'
+2019-07-22 23:37:12,068 - autofit.utils - DEBUG - importing module risks
+2019-07-22 23:37:12,068 - autofit.network - DEBUG - linking slot 'tau'
+2019-07-22 23:37:12,068 - autofit.network - DEBUG - linking slot 'delta'
+2019-07-22 23:37:12,069 - autofit.utils - DEBUG - importing module market_data
+2019-07-22 23:37:12,069 - autofit.network - DEBUG - linking slot 'european_totem'
+2019-07-22 23:37:12,069 - autofit.network - DEBUG - linking slot 'varswap_totem'
+2019-07-22 23:37:12,069 - autofit.network - DEBUG - linking slot 'volswap_totem'
+2019-07-22 23:37:12,069 - autofit.network - DEBUG - linking slot 'trs_totem'
+2019-07-22 23:37:12,070 - autofit.utils - INFO - importing /home/renzo/python/autofit/producers/__init__.pyc from autofit.producers
+2019-07-22 23:37:12,071 - autofit.utils - DEBUG - importing module parameters
+2019-07-22 23:37:12,072 - autofit.network - DEBUG - linking producer 'synthetic_fwd_fitter'
+2019-07-22 23:37:12,073 - autofit.network - DEBUG - linking producer 'vol_fitter'
+2019-07-22 23:37:12,073 - autofit.network - DEBUG - linking producer 'trs_fitter'
+2019-07-22 23:37:12,073 - autofit.network - DEBUG - linking producer 'trs_fwd_fitter'
+2019-07-22 23:37:12,073 - autofit.network - DEBUG - linking producer 'varswap_fitter'
+2019-07-22 23:37:12,073 - autofit.network - DEBUG - linking producer 'proxy_vol_fitter'
+2019-07-22 23:37:12,074 - autofit.utils - DEBUG - importing module report
+2019-07-22 23:37:12,074 - autofit.network - DEBUG - linking producer 'black_scholes_calculator'
+2019-07-22 23:37:12,074 - autofit.utils - DEBUG - importing module market_data
+2019-07-22 23:37:12,074 - autofit.network - DEBUG - linking producer 'totem_daily'
+2019-07-22 23:37:12,074 - autofit - INFO - Network was successfully linked

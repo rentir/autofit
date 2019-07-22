@@ -156,13 +156,14 @@ def insert_slot(slot, producer=None):
         logger.error("db in inconsistent state, more than one slot found")
     except Exception as e:
         raise e
-    if len(slot.listeners) == 0:
+    if len(slot.listeners) == 0:  # Ok, I do this GOOD!
         slot.current.set()
+    else:
+        slot.pending.set()
     session_.add(slot)
     if producer:
         producer.outputs.append(slot)
     broadcast(slot)
-    slot.pending.set()
     session_.commit()
     return True
 
@@ -384,3 +385,22 @@ if __name__ == '__main__':
                priority=2, path='.', state=SlotStatesEnum.void)
     session.add(s1n)
     insert_slot(s1n)
+
+
+def lineage(slot):
+    """
+
+    :param slot:
+    :type slot: Slot
+    :return:
+    """
+    data = {'name': slot.name, 'sid': slot.sid, 'keys': slot.keys}  # , 'pname': producer.pname, 'pid': producer.pid}
+    if slot.producers:
+        producer = slot.producers[0]
+        data.update({'pname': producer.pname, 'pid': producer.pid})
+        inputs = []
+        for slot_ in producer.inputs:
+            inputs.append(lineage(slot_))
+    else:
+        inputs = None
+    return {'slot': data, 'inputs': inputs}

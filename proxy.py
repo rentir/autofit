@@ -193,4 +193,8 @@ def start_producers():
         logger.debug("%s task ready for execution" % len(producers))
         for idx in range(0, len(producers), batch_size):
             execute(producers[idx:(idx+batch_size)])
+            # Need to set status on input slots to pending
+            for producer in producers[idx:(idx+batch_size)]:
+                for slot in producer.inputs:
+                    slot.pending.set()
             session_.commit()
