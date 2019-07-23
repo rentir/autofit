@@ -89,10 +89,12 @@ def acknowledge(slot):
     def inner(producer, result=True):
         _broadcasting_slots[slot.name] -= 1
         logger.debug("acknowledge received from '%s' with result '%s'" % (producer.name, result))
-        logger.debug("pending %s acknowledgments" % _broadcasting_slots[slot.name])
         if _broadcasting_slots[slot.name] == 0:
             del _broadcasting_slots[slot.name]
-            slot.pending.set()
+            logger.debug("all producers acknowledged")
+            # slot.pending.set()
+        else:
+            logger.debug("pending %s acknowledgments" % _broadcasting_slots[slot.name])
     return inner
 
 
@@ -196,5 +198,7 @@ def start_producers():
             # Need to set status on input slots to pending
             for producer in producers[idx:(idx+batch_size)]:
                 for slot in producer.inputs:
+                    logger.debug("slot '%s' with sid='%s' set to PENDING due to running producer" % (slot.name,
+                                                                                                     slot.sid))
                     slot.pending.set()
             session_.commit()

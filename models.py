@@ -154,17 +154,22 @@ def insert_slot(slot, producer=None):
         logger.debug("The slot is NEW")
     except MultipleResultsFound:
         logger.error("db in inconsistent state, more than one slot found")
+        return False
     except Exception as e:
         raise e
-    if len(slot.listeners) == 0:  # Ok, I do this GOOD!
-        slot.current.set()
-    else:
-        slot.pending.set()
     session_.add(slot)
+    listeners = slot.listeners
+    if len(listeners) == 0:  # Ok, I do this GOOD!
+        slot.current.set()
+        logger.debug("slot '%s' with keys='%s' has no listeners, state set to '%s'" % (slot.name, slot.keys,
+                                                                                       slot.state.upper()))
+    else:
+        logger.debug('slot has %s listeners, state kept as PENDING' % len(listeners))
     if producer:
         producer.outputs.append(slot)
     broadcast(slot)
     session_.commit()
+    logger.debug("inserted slot has sid='%s' and state '%s'" % (slot.sid, slot.state.upper()))
     return True
 
 

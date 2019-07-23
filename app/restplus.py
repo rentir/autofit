@@ -4,8 +4,8 @@ from autofit.app import settings
 
 
 log = logging.getLogger(__name__)
-api = Api(version='1.0', title='My Blog API',
-          description='A simple demonstration of a Flask RestPlus powered API')
+api = Api(version='1.0', title='Autofit API',
+          description='A simple demonstration of the Autofit IPV system')
 
 
 @api.errorhandler
