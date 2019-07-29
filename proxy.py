@@ -92,7 +92,6 @@ def acknowledge(slot):
         if _broadcasting_slots[slot.name] == 0:
             del _broadcasting_slots[slot.name]
             logger.debug("all producers acknowledged")
-            # slot.pending.set()
         else:
             logger.debug("pending %s acknowledgments" % _broadcasting_slots[slot.name])
     return inner

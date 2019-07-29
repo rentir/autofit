@@ -106,13 +106,13 @@ class Slot(Base):
     def failed(self):
         pass
 
-    @transition(source=[SlotStatesEnum.current, SlotStatesEnum.pending, SlotStatesEnum.failed],
+    @transition(source=[SlotStatesEnum.stale, SlotStatesEnum.current, SlotStatesEnum.pending, SlotStatesEnum.failed],
                 target=SlotStatesEnum.stale)
-    def stale(self):
+    def stale(self):  # NB: a slot can be set to stale multiple times if depends on multiple producers
         pass
 
     def __repr__(self):
-        return "<Slot(sid=%s, name='%s', keys='%s', date=%s, priority=%s, state='%s', dbid='%s')>" % \
+        return "<Slot(sid='%s', name='%s', keys='%s', date=%s, priority=%s, state='%s', dbid='%s')>" % \
                 (self.sid, self.name, self.keys, self.date, self.priority, self.state, self.dbid)
 
 
@@ -143,7 +143,7 @@ def insert_slot(slot, producer=None):
                                          Slot.date == slot.date)).filter(or_(Slot.current(), Slot.pending()))
     try:
         slot0 = q.one()
-        logger.debug("found existing current slot '%s'" % slot0.sid)
+        logger.debug("found existing current slot %s" % slot0)
         if slot0.priority <= slot.priority:
             logger.debug("new slot has higher priority")
             invalidate_slot(slot0)
@@ -156,6 +156,7 @@ def insert_slot(slot, producer=None):
         logger.error("db in inconsistent state, more than one slot found")
         return False
     except Exception as e:
+        logger.exception('failure when inserting slot %s' % slot)
         raise e
     session_.add(slot)
     listeners = slot.listeners

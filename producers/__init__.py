@@ -47,6 +47,9 @@ class Daemon(_ProducerBase):
         super(Daemon, self).__init__(name=name, requires=None, provides=provides, priority=0,
                                      filters={}, delay=0, batch_size=None, exclusive=False)
 
+    def __repr__(self):
+        return "<Daemon(name='%s', provides=%s)>" % (self.name, self.provides)
+
 
 class Producer(_ProducerBase):
 
@@ -54,6 +57,12 @@ class Producer(_ProducerBase):
         super(Producer, self).__init__(name=name, requires=requires, provides=provides, priority=priority,
                                        filters=filters or [], batch_size=batch_size, delay=delay or 0,
                                        exclusive=exclusive)
+
+    def __repr__(self):
+        return "<Producer(name='%s', requires=%s, provides=%s, priority=%s, " \
+               "filter=%s, delays=%s, batch_size=%s, exclusive=%s)>" % (self.name, self.requires, self.provides,
+                                                                        self.priority, self.filters, self.batch_size,
+                                                                        self.delay, self.exclusive)
 
 
 class JoinedSlot(object):

@@ -23,7 +23,9 @@ class SlotNode(object):
         self.listeners = set()
 
     def __repr__(self):
-        return "<SlotNode(obj=%s, producers=%s, listeners=%s)>" % (self.obj, self.producers, self.listeners)
+        return "<SlotNode(obj='%s', producers=%s, listeners=%s)>" % (self.obj.name,
+                                                                     [x.obj.name for x in self.producers],
+                                                                     [x.obj.name for x in self.listeners])
 
 
 class ProducerNode(object):
@@ -33,7 +35,9 @@ class ProducerNode(object):
         self.requires = set()
 
     def __repr__(self):
-        return "<ProducerNode(obj=%s, provides=%s, requires=%s)>" % (self.obj, self.provides, self.requires)
+        return "<ProducerNode(obj='%s', provides=%s, requires=%s)>" % (self.obj.name, [x.
+                                                                       obj.name for x in self.provides],
+                                                                       [x.obj.name for x in self.requires])
 
 
 def link_slot(slot):
