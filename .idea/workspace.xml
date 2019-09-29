@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="57ddac48-a176-4ff3-a4b9-0b476db1da08" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/autofit.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/autofit.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="57ddac48-a176-4ff3-a4b9-0b476db1da08" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -235,6 +230,7 @@
     <MESSAGE value="fixed broadcasting slots counter" />
     <MESSAGE value="added lineage" />
     <MESSAGE value="fix bug with 'pending' slots" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix bug with 'pending' slots" />
+    <MESSAGE value="initial migration to python 3.6" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial migration to python 3.6" />
   </component>
 </project>
